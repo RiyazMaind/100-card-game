@@ -1,0 +1,17 @@
+{
+  "name": "Kodeshala — 100-Card Algorithm Challenge",
+  "short_name": "Kodeshala",
+  "description": "An interactive educational game for Grade 7–8 students learning sorting, searching, and algorithmic thinking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563EB",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

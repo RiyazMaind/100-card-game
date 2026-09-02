@@ -555,3 +555,58 @@ body {
   border-color: #06b6d4;
   color: #22d3ee;
 }
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+/* Focus-visible ring for all interactive elements */
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Skip-nav link visible only on focus */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .card-inner {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .card-container {
+    border: 2px solid ButtonText;
+  }
+  .card-back,
+  .card-front {
+    border: 2px solid ButtonText;
+  }
+  .tab-btn.active {
+    border: 2px solid Highlight;
+  }
+}
