@@ -128,7 +128,9 @@ function Card({
       }}
     >
       <div className="card-inner">
-        <div className="card-face card-back" />
+        <div className="card-face card-back">
+          <span className="kodeshala-mark">Kodeshala</span>
+        </div>
         <div className="card-face card-front">
           <span className="card-number">{card.value}</span>
         </div>
@@ -605,9 +607,19 @@ export default function Game() {
   // ============================================================
 
   return (
-    <div className={`min-h-screen flex flex-col ${classroomMode ? "classroom-mode" : ""}`}>
+    <div id="main-content" className={`min-h-screen flex flex-col ${classroomMode ? "classroom-mode" : ""}`} role="main">
       {/* Header */}
-      <header className="text-center py-6 px-4">
+      <header className="kodeshala-header text-center py-6 px-4" role="banner">
+        {/* Kodeshala Brand Wordmark */}
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <div className="kodeshala-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="4 4 10 12 4 20" />
+              <line x1="14" y1="4" x2="20" y2="20" />
+            </svg>
+          </div>
+          <span className="kodeshala-wordmark text-2xl sm:text-3xl">Kodeshala</span>
+        </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
           <span className="text-indigo-400">100-CARD</span>{" "}
           <span className="text-white">ALGORITHM</span>{" "}
@@ -619,7 +631,7 @@ export default function Game() {
       </header>
 
       {/* Navigation Tabs */}
-      <div className="flex justify-center gap-2 px-4 mb-4 flex-wrap">
+      <nav className="flex justify-center gap-2 px-4 mb-4 flex-wrap" aria-label="Game sections">
         <button className={`tab-btn ${activeTab === "game" ? "active" : ""}`} onClick={() => setActiveTab("game")}>
           🎮 Game
         </button>
@@ -635,15 +647,15 @@ export default function Game() {
         <button className={`tab-btn ${activeTab === "teacher" ? "active" : ""}`} onClick={() => setActiveTab("teacher")}>
           👨‍🏫 Teacher
         </button>
-      </div>
+      </nav>
 
       {/* Main Content */}
-      <div className="flex-1 px-4 pb-8">
+      <div className="flex-1 px-4 pb-8" aria-live="polite">
         {/* ==================== GAME TAB ==================== */}
         {activeTab === "game" && (
           <div className="max-w-5xl mx-auto">
             {/* Mode Selector */}
-            <div className="flex justify-center gap-2 mb-4 flex-wrap">
+            <div className="flex justify-center gap-2 mb-4 flex-wrap" role="group" aria-label="Search mode">
               <button className={`tab-btn ${gameMode === "freeplay" ? "active" : ""}`} onClick={() => switchMode("freeplay")}>
                 🆓 Free Play
               </button>
@@ -677,7 +689,7 @@ export default function Game() {
             </div>
 
             {/* Stats Bar */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4" role="status" aria-label="Game statistics">
               <div className="stat-card">
                 <div className="stat-label">Target Number</div>
                 <div className="stat-value text-indigo-400">{target}</div>
@@ -774,7 +786,7 @@ export default function Game() {
             )}
 
             {/* Card Grid */}
-            <div className={`card-grid ${classroomMode ? "max-w-full" : ""}`}>
+            <div className={`card-grid ${classroomMode ? "max-w-full" : ""}`} role="grid" aria-label="100 card deck">
               {deck.map((card, index) => (
                 <Card
                   key={index}
@@ -788,10 +800,10 @@ export default function Game() {
             {/* Action Buttons */}
             {!gameOver && (
               <div className="flex justify-center gap-4 mt-6 flex-wrap">
-                <button className="btn-success" onClick={handleFoundIt}>
+                <button className="btn-success" onClick={handleFoundIt} aria-label="Confirm the target number has been found">
                   ✅ FOUND IT
                 </button>
-                <button className="btn-danger" onClick={handleNotInDeck}>
+                <button className="btn-danger" onClick={handleNotInDeck} aria-label="Confirm the target number is not in the deck">
                   ❌ NOT IN THE DECK
                 </button>
               </div>
@@ -1339,8 +1351,22 @@ export default function Game() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-4 text-slate-500 text-xs border-t border-slate-800">
-        100-Card Algorithm Challenge · Teaching Sorting → Searching → Algorithmic Thinking
+      <footer className="kodeshala-footer text-center py-5 px-4" role="contentinfo">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="kodeshala-logo" style={{ width: 28, height: 28, borderRadius: 7 }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
+              <polyline points="4 4 10 12 4 20" />
+              <line x1="14" y1="4" x2="20" y2="20" />
+            </svg>
+          </div>
+          <span className="kodeshala-wordmark text-sm">Kodeshala</span>
+        </div>
+        <p className="text-slate-500 text-xs">
+          100-Card Algorithm Challenge · Teaching Sorting → Searching → Algorithmic Thinking
+        </p>
+        <p className="text-slate-600 text-[10px] mt-1">
+          A Kodeshala educational experience for Grade 7–8 students
+        </p>
       </footer>
     </div>
   );
