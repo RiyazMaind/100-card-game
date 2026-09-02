@@ -466,3 +466,92 @@ body {
 .tooltip:hover::after {
   opacity: 1;
 }
+
+/* ============================================================
+   KODESHALA BRANDING
+   ============================================================ */
+
+/* Brand colors */
+:root {
+  --kodeshala-primary: #06b6d4;
+  --kodeshala-primary-light: #22d3ee;
+  --kodeshala-primary-dark: #0891b2;
+  --kodeshala-accent: #8b5cf6;
+  --kodeshala-bg-glow: rgba(6, 182, 212, 0.08);
+}
+
+/* Kodeshala header band */
+.kodeshala-header {
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.06) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+}
+
+/* Kodeshala wordmark */
+.kodeshala-wordmark {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #06b6d4, #22d3ee, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Kodeshala logo icon container */
+.kodeshala-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(6, 182, 212, 0.35);
+  flex-shrink: 0;
+}
+
+.kodeshala-logo svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Footer branding */
+.kodeshala-footer {
+  background: linear-gradient(0deg, rgba(6, 182, 212, 0.04) 0%, transparent 100%);
+  border-top: 1px solid rgba(6, 182, 212, 0.08);
+}
+
+/* Card back Kodeshala mark */
+.card-back .kodeshala-mark {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.45em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* Classroom mode Kodeshala header */
+.classroom-mode .kodeshala-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+}
+
+.classroom-mode .kodeshala-logo svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* Kodeshala branded tab active state */
+.tab-btn.active {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: #06b6d4;
+  color: #22d3ee;
+}

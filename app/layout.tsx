@@ -6,8 +6,9 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "100-Card Algorithm Challenge",
-  description: "An interactive educational game teaching sorting, searching, and algorithmic thinking through a 100-card challenge.",
+  title: "Kodeshala · 100-Card Algorithm Challenge",
+  description:
+    "Kodeshala — An interactive educational game by Kodeshala for Grade 7–8 students learning sorting, searching, and algorithmic thinking through a fun 100-card challenge.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
