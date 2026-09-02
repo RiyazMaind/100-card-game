@@ -1,26 +1,468 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --card-bg: #1e293b;
+  --card-back: #334155;
+  --card-front: #f8fafc;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --eliminated-bg: rgba(148, 163, 184, 0.15);
+  --eliminated-border: rgba(148, 163, 184, 0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  color: #e2e8f0;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .card-grid {
+    grid-template-columns: repeat(8, 1fr);
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 700px) {
+  .card-grid {
+    grid-template-columns: repeat(6, 1fr);
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 520px) {
+  .card-grid {
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 380px;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 400px) {
+  .card-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 3px;
+  }
+}
+
+/* Card Container */
+.card-container {
+  perspective: 800px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+}
+
+.card-container.eliminated {
+  pointer-events: none;
+}
+
+/* Card Inner - the flip transform target */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.card-container.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Card Face (shared) */
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+}
+
+/* Card Back */
+.card-back {
+  background: linear-gradient(145deg, #4338ca, #6366f1);
+  border-color: #818cf8;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  overflow: hidden;
+}
+
+.card-back::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.card-back::after {
+  content: "?";
+  font-size: 1.8em;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.card-container:not(.flipped):not(.eliminated):hover .card-back {
+  background: linear-gradient(145deg, #4f46e5, #7c3aed);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5);
+  transform: scale(1.05);
+}
+
+/* Card Front */
+.card-front {
+  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+  border-color: #94a3b8;
+  transform: rotateY(180deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-front .card-number {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #1e293b;
+  font-family: var(--font-geist-mono), monospace;
+  text-align: center;
+  line-height: 1.1;
+  word-break: break-all;
+  padding: 2px;
+}
+
+/* Target highlight */
+.card-front.target-match {
+  background: linear-gradient(145deg, #bbf7d0, #86efac);
+  border-color: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+}
+
+/* Newly selected glow */
+.card-container.just-selected .card-back {
+  animation: pulse-glow 0.6s ease-out;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.8); }
+  100% { box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3); }
+}
+
+/* Eliminated state */
+.card-container.eliminated .card-inner {
+  opacity: 0.3;
+  transform: scale(0.92);
+}
+
+.card-container.eliminated .card-back {
+  background: linear-gradient(145deg, #475569, #64748b);
+  border-color: #94a3b8;
+}
+
+.card-container.eliminated .card-back::after {
+  content: "✕";
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Possible / active range highlight */
+.card-container.possible .card-back {
+  border-color: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.3);
+}
+
+/* Score badges */
+.score-excellent { color: #22c55e; }
+.score-great { color: #60a5fa; }
+.score-good { color: #fbbf24; }
+.score-practicing { color: #fb923c; }
+
+/* Tab buttons */
+.tab-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.tab-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+  color: #a5b4fc;
+}
+
+/* Action buttons */
+.btn-primary {
+  background: linear-gradient(145deg, #6366f1, #4f46e5);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(145deg, #818cf8, #6366f1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.btn-success {
+  background: linear-gradient(145deg, #22c55e, #16a34a);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+
+.btn-success:hover {
+  background: linear-gradient(145deg, #4ade80, #22c55e);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: linear-gradient(145deg, #ef4444, #dc2626);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(145deg, #f87171, #ef4444);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Panel styles */
+.panel {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.panel-highlight {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Stats card */
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-family: var(--font-geist-mono), monospace;
+  color: #f1f5f9;
+}
+
+/* Sortable mini-game cards */
+.sort-card {
+  width: 64px;
+  height: 80px;
+  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+  border: 2px solid #94a3b8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+  font-family: var(--font-geist-mono), monospace;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.sort-card:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.sort-card.drag-over {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.sort-card.correct {
+  border-color: #22c55e;
+  background: linear-gradient(145deg, #bbf7d0, #86efac);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Classroom mode */
+.classroom-mode .card-back::after {
+  font-size: 2.5em;
+}
+
+.classroom-mode .card-front .card-number {
+  font-size: 1.6em;
+}
+
+.classroom-mode .stat-value {
+  font-size: 2.5rem;
+}
+
+.classroom-mode .stat-label {
+  font-size: 1rem;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Slide-up for results */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Number line visualization */
+.number-line {
+  position: relative;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.number-line-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.5);
+  border-radius: 8px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
 }
